@@ -3,16 +3,15 @@
 /*	Check if there's a character that isn't allowed,
 	or if it's missing a element.
 	Clean quit if error is found. */
-void	check_char(char **map, int x, int y)
+static void	check_char(char **map, int x, int y)
 {
 	int		c;
-	int		e;
-	int		p;
+	int		ep;
 	char	**str;
 
+	str = map;
 	c = 0;
-	e = 0;
-	p = 0;
+	ep = 0;
 	while (*str)
 	{
 		while (**str)
@@ -21,24 +20,23 @@ void	check_char(char **map, int x, int y)
 				continue ;
 			else if (**str == "C")
 				++c;
-			else if (**str == "E")
-				++e;
-			else if (**str == "P")
-				++p;
+			else if (**str == "E" || **str == "P")
+				++ep;
 			else
-				error_msg(8, str);
+				error_msg(2, str);
 			++*str;
 		}
 		++str;
 	}
-	if (c < 1 || e != 1 || p != 1)
-		error_msg(8, str);
+	if (c < 1 || ep != 2)
+		error_msg(5, str);
 }
 
 /*	Check if there's available path to collect everything and exit 
 	Clean quit if there isn't*/
-void	check_path(char **str, int x, int y)
+static void	check_path(char **str, int x, int y)
 {
+
 	error_msg(3, str);
 }
 
@@ -65,32 +63,45 @@ void	check_walls(char **str, int x, int y)
 	}
 }
 
+/* Get size of map and put if on x and y */
+static void	get_size(int fd, int *x, int *y)
+{
+	char	buffer;
+
+	buffer = 0;
+	while (read(fd, &buffer, 1) && buffer != "\n")
+		++x;
+	if (!buffer)
+		error_msg(0, NULL);
+	++y;
+	while (read(fd, buffer, 1))
+		if (buffer == "\n")
+			++y;
+	if (x <= y || y < 3)
+		error_msg(1, NULL);
+}
+
 /*	Check if map is correct, give it's size to x and y
 	and return maps as char array */
-char	**check_map(int fd, int *x, int *y)
+char	**get_map(int fd, int *x, int *y)
 {
 	char	**str;
 	int		i;
 
 	i = 0;
-	str = ft_calloc(sizeof(char **), 10000);
+	get_size(fd, &x, &y);
+	str = ft_calloc(sizeof(char **), x + 2);
 	if (!str)
-		return (NULL);
+		error_msg(6, NULL);
 	str[i] = get_next_line(fd);
-	if (!str[i])
-		error_msg(0, str);
-	x = ft_strlen(str[i]);
 	while (str[i++])
 	{
 		str[i] = get_next_line(fd);
-		if (strlen(str[i] != x))
-			error_msg(2, str);
-		++y;
+		if (strlen(str[i] != x + 1))
+			error_msg(1, str);
 	}
 	check_walls(str, x, y);
+	check_char(str, x, y);
 	check_path(str, x, y);
-	if (y < 3)
-		error_msg(2, str);
-	x -= 1;
 	return (str);
 }

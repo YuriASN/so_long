@@ -17,11 +17,6 @@
 # include <errno.h>
 
 void	error_msg(int nbr, char **str);
-
-void	check_char(char **map, int x, int y);
-void	check_path(char **str, int x, int y);
-void	check_walls(char **str, int x, int y);
-char	**check_map(int fd, int *x, int *y);
-
+char	**get_map(int fd, int *x, int *y);
 
 #endif
