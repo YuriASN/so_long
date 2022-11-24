@@ -17,9 +17,9 @@ static void	check_name(char *name)
 int	main(char *file_name)
 {
 	void	*mlx;
+	char	**map;
 	int		x;
 	int		y;
-	char	**map;
 	int		fd;
 
 	check_name(file_name);
@@ -29,7 +29,5 @@ int	main(char *file_name)
 	x = 0;
 	y = 0;
 	map = get_map(fd, &x, &y);
-
-
 	return (0);
 }

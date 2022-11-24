@@ -32,14 +32,6 @@ static void	check_char(char **map, int x, int y)
 		error_msg(5, str);
 }
 
-/*	Check if there's available path to collect everything and exit 
-	Clean quit if there isn't*/
-static void	check_path(char **str, int x, int y)
-{
-
-	error_msg(3, str);
-}
-
 /*	Check if there's wall all around the map
 	Clean quit if there isn't */
 void	check_walls(char **str, int x, int y)
@@ -90,18 +82,18 @@ char	**get_map(int fd, int *x, int *y)
 
 	i = 0;
 	get_size(fd, &x, &y);
-	str = ft_calloc(sizeof(char **), x + 2);
+	str = ft_calloc(sizeof(char **), *x + 2);
 	if (!str)
 		error_msg(6, NULL);
 	str[i] = get_next_line(fd);
 	while (str[i++])
 	{
 		str[i] = get_next_line(fd);
-		if (strlen(str[i] != x + 1))
+		if (strlen(str[i] != *x + 1))
 			error_msg(1, str);
 	}
-	check_walls(str, x, y);
-	check_char(str, x, y);
-	check_path(str, x, y);
+	check_walls(str, *x, *y);
+	check_char(str, *x, *y);
+	check_path(str);
 	return (str);
 }

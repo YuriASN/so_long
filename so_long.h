@@ -18,5 +18,6 @@
 
 void	error_msg(int nbr, char **str);
 char	**get_map(int fd, int *x, int *y);
+void	check_path(char **str, int x, int y);
 
 #endif
