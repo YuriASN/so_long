@@ -17,17 +17,15 @@ printf("%sCheck char%s\n", YEL, CRESET);
 	{
 		while (**str)
 		{
-			if (**str == '1' || **str == '0' || **str == '\n')
-				continue ;
-			else if (**str == 'C')
+			if (**str == 'C')
 				++clt;
 			else if (**str == 'E' || **str == 'P')
 				++ep;
-			else
+			else if (**str != '1' && **str != '0' && str[0][1])
 				error_msg(2, str);
 			++*str;
 		}
-		++str; printf("prox str\t");
+		++str;
 	}
 	if (clt < 1 || ep != 2)
 		error_msg(5, str);
