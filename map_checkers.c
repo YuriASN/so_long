@@ -2,98 +2,93 @@
 
 /*	Check if there's a character that isn't allowed,
 	or if it's missing a element.
-	Clean quit if error is found. */
-static void	check_char(char **map, int x, int y)
+	Clean quit if error is found or return amount of collectibles */
+static int	check_char(char **map, int x, int y)
 {
-	int		c;
+printf("%sCheck char%s\n", YEL, CRESET);
+	int		clt;
 	int		ep;
 	char	**str;
 
 	str = map;
-	c = 0;
+	clt = 0;
 	ep = 0;
 	while (*str)
 	{
 		while (**str)
 		{
-			if (**str == "1" || **str == "0" || **str == "\n")
+			if (**str == '1' || **str == '0' || **str == '\n')
 				continue ;
-			else if (**str == "C")
-				++c;
-			else if (**str == "E" || **str == "P")
+			else if (**str == 'C')
+				++clt;
+			else if (**str == 'E' || **str == 'P')
 				++ep;
 			else
 				error_msg(2, str);
 			++*str;
 		}
-		++str;
+		++str; printf("prox str\t");
 	}
-	if (c < 1 || ep != 2)
+	if (clt < 1 || ep != 2)
 		error_msg(5, str);
+	return (clt);
 }
 
 /*	Check if there's wall all around the map
 	Clean quit if there isn't */
-void	check_walls(char **str, int x, int y)
+static void	check_walls(char **map, int x, int y)
 {
+printf("%sCheck Walls%s\n", YEL, CRESET);
 	int	i;
 	int	j;
 
 	i = -1;
 	j = 0;
-	while (str[0][++i] && i < x -1)
-		if (str[j][i] != "1")
-			error_msg(4, str);
+	while (map[0][++i] && i < x)
+		if (map[j][i] != '1')
+			error_msg(4, map);
 	i = -1;
-	while (str[y - 1][++i] && i < x -1)
-		if (str[y -1][i] != "1")
-			error_msg(4, str);
-	while (str[++j] && j < (y -1))
+	while (map[y - 1][++i] && i < x)
+		if (map[y -1][i] != '1')
+			error_msg(4, map);
+	while (map[++j] && j < (y -1))
 	{
-		if (str[j][0] != "1" || str[j][x - 2] != "1")
-			error_msg(4, str);
+		if (map[j][0] != '1' || map[j][x - 1] != '1')
+			error_msg(4, map);
 	}
-}
-
-/* Get size of map and put if on x and y */
-static void	get_size(int fd, int *x, int *y)
-{
-	char	buffer;
-
-	buffer = 0;
-	while (read(fd, &buffer, 1) && buffer != "\n")
-		++x;
-	if (!buffer)
-		error_msg(0, NULL);
-	++y;
-	while (read(fd, buffer, 1))
-		if (buffer == "\n")
-			++y;
-	if (x <= y || y < 3)
-		error_msg(1, NULL);
 }
 
 /*	Check if map is correct, give it's size to x and y
 	and return maps as char array */
-char	**get_map(int fd, int *x, int *y)
+char	**get_map(int fd, int x, int y)
 {
-	char	**str;
-	int		i;
 
-	i = 0;
-	get_size(fd, &x, &y);
-	str = ft_calloc(sizeof(char **), *x + 2);
-	if (!str)
-		error_msg(6, NULL);
-	str[i] = get_next_line(fd);
-	while (str[i++])
+	char	**map;
+	int		i;
+	int		clt;
+
+printf("x = %i\t y = %i\n", x, y);
+	i = -1;
+	/* map = ft_calloc(sizeof(char **), (x + 2) * (y + 1));
+	if (!map)
+		error_msg(6, NULL); */
+	map[y] = NULL;
+	while (++i < y)
 	{
-		str[i] = get_next_line(fd);
-		if (strlen(str[i] != *x + 1))
-			error_msg(1, str);
+//printf("%i\t", i);
+		map[i] = get_next_line(fd);
+		if (i < y - 1 && strlen(map[i]) != x + 1){printf("porra emu\n");
+			error_msg(1, map);}
+//printf("%s", map[i]);
 	}
-	check_walls(str, *x, *y);
-	check_char(str, *x, *y);
-	check_path(str);
-	return (str);
+int o = -1;
+while (map[++o]){printf("%i\t", o);
+	printf("%s", map[o]);}
+printf("\n");
+	if (strlen(map[y - 1]) != x)
+		error_msg(1, map);
+	check_walls(map, x, y);
+	clt = check_char(map, x, y);
+	//check_path(map, clt);
+	return (map);
 }
