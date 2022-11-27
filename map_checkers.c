@@ -5,29 +5,29 @@
 	Clean quit if error is found or return amount of collectibles */
 static int	check_char(char **map, int x, int y)
 {
-	int		clt;
-	int		ep;
-	char	**str;
+	int	clt;
+	int	ep;
+	int	xc;
 
-	str = map;
 	clt = 0;
 	ep = 0;
-	while (*str)
+	while (y > 0)
 	{
-		while (**str)
+		--y;
+		xc = x;
+		while (xc > 0)
 		{
-			if (**str == 'C')
+			--xc;
+			if (map[y][xc] == 'C')
 				++clt;
-			else if (**str == 'E' || **str == 'P')
+			else if (map[y][xc] == 'E' || map[y][xc] == 'P')
 				++ep;
-			else if (**str != '1' && **str != '0' && str[0][1])
-				error_msg(2, str);
-			++*str;
+			else if (map[y][xc] != '1' && map[y][xc] != '0' && map[y][xc + 1])
+				error_msg(2, map);
 		}
-		++str;
 	}
 	if (clt < 1 || ep != 2)
-		error_msg(5, str);
+		error_msg(5, map);
 	return (clt);
 }
 
@@ -58,7 +58,6 @@ static void	check_walls(char **map, int x, int y)
 	and return maps as char array */
 char	**get_map(int fd, int x, int y)
 {
-
 	char	**map;
 	int		i;
 	int		clt;
@@ -74,12 +73,11 @@ char	**get_map(int fd, int x, int y)
 		if (i < y - 1 && strlen(map[i]) != x + 1)
 			error_msg(1, map);
 	}
-//int o = -1; while (map[++o]){printf("%i\t", o);	printf("%s", map[o]); printf("\n");}
 	if (strlen(map[y - 1]) != x)
 		error_msg(1, map);
 	check_walls(map, x, y);
+//int o = -1; while (map[++o]){printf("%i\t", o);	printf("%s", map[o]);} printf("\n");
 	clt = check_char(map, x, y);
-int o = -1; while (map[++o]){printf("%i\t", o);	printf("%s", map[o]); printf("\n");}
 	//check_path(map, clt);
 	return (map);
 }
