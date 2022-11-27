@@ -17,6 +17,7 @@ static void	get_size(int fd, int *x, int *y)
 	++*y;
 	if (*x <= *y || *y < 3)
 		error_msg(1, NULL);
+	close(fd);
 }
 
 /* Check if file extension is .ber */
@@ -50,10 +51,10 @@ int	main(int argc, char **argv)
 	if (fd < 3)
 		return (0);
 	get_size(fd, &x, &y);
-	close(fd);
 	fd = open(argv[1], O_RDONLY);
 	map = get_map(fd, x, y);
 //free(map);
-printf("%sExited gracefully%s\n", GRN, CRESET);
+//int o = -1; while (map[++o]){printf("%i\t", o); printf("%s", map[o]);}
+printf("\n\t\t%sExited gracefully%s\n\n", GRN, CRESET);
 	return (0);
 }

@@ -54,13 +54,45 @@ static void	check_walls(char **map, int x, int y)
 	}
 }
 
+/*	Get position x and y of player in a array. */
+static void	get_player(char **map, int *px, int *py)
+{
+	while (map[++*py + 1])
+	{
+		*px = 0;
+		while (map[*py][++*px + 1])
+		{
+			if (map[*py][*px] == 'P')
+			{
+				return ;
+			}
+		}
+	}
+}
+
+/*	Run remained map checkers. */
+static void	run_checkers(char **map, int x, int y)
+{
+	int		px;
+	int		py;
+	int		clt;
+
+	px = 0;
+	py = 0;
+	check_walls(map, x, y);
+//int o = -1; while (map[++o]){printf("%i\t", o);	printf("%s", map[o]);} printf("\n");
+	clt = check_char(map, x, y);
+	get_player(map, &px, &py);
+//printf("player pos x, y = %i, %i\n", px, py);
+	check_path(map, clt, px, py);
+}
+
 /*	Check if map is correct, give it's size to x and y
-	and return maps as char array */
+	and return maps as char array. */
 char	**get_map(int fd, int x, int y)
 {
 	char	**map;
 	int		i;
-	int		clt;
 
 	i = -1;
 	/* map = ft_calloc(sizeof(char **), (x + 2) * (y + 1));
@@ -75,9 +107,6 @@ char	**get_map(int fd, int x, int y)
 	}
 	if (strlen(map[y - 1]) != x)
 		error_msg(1, map);
-	check_walls(map, x, y);
-//int o = -1; while (map[++o]){printf("%i\t", o);	printf("%s", map[o]);} printf("\n");
-	clt = check_char(map, x, y);
-	//check_path(map, clt);
+	run_checkers(map, x, y);
 	return (map);
 }
