@@ -4,8 +4,8 @@
 	Can be followed by a custom message led by "nbr". */
 void	error_msg(int nbr, char **str)
 {
-	/* if (str)
-		free(str); */
+	while (*str)
+		free(*str++);
 	if (nbr == 0)
 		perror("Error\nFile has no data.\n");
 	else if (nbr == 1)
@@ -22,5 +22,6 @@ void	error_msg(int nbr, char **str)
 		perror("Error\nCouldn't malloc.\n");
 	else if (nbr == 7)
 		perror("Error\nInvalid number of arguments.\n");
+//close windows;
 	exit (0);
 }

@@ -53,8 +53,10 @@ int	main(int argc, char **argv)
 	get_size(fd, &x, &y);
 	fd = open(argv[1], O_RDONLY);
 	map = get_map(fd, x, y);
-//free(map);
+int o = -1;printf("fim do main\n"); while (map[++o]){printf("%i\t", o);	printf("%s", map[o]);} printf("\n");
+while(*map)
+	free(*map++);
 //int o = -1; while (map[++o]){printf("%i\t", o); printf("%s", map[o]);}
 printf("\n\t\t%sExited gracefully%s\n\n", GRN, CRESET);
-	return (0);
+	exit (0);
 }

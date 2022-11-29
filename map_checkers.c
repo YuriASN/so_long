@@ -80,11 +80,9 @@ static void	run_checkers(char **map, int x, int y)
 	px = 0;
 	py = 0;
 	check_walls(map, x, y);
-//int o = -1; while (map[++o]){printf("%i\t", o);	printf("%s", map[o]);} printf("\n");
 	clt = check_char(map, x, y);
 	get_player(map, &px, &py);
-//printf("player pos x, y = %i, %i\n", px, py);
-	check_path(map, clt, px, py);
+	check_path(map, clt + 2, px, py);
 }
 
 /*	Check if map is correct, give it's size to x and y
@@ -95,9 +93,9 @@ char	**get_map(int fd, int x, int y)
 	int		i;
 
 	i = -1;
-	/* map = ft_calloc(sizeof(char **), (x + 2) * (y + 1));
+	map = ft_calloc(sizeof(char **), y + 1);
 	if (!map)
-		error_msg(6, NULL); */
+		error_msg(6, NULL);
 	map[y] = NULL;
 	while (++i < y)
 	{
