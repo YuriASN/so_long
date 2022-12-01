@@ -82,7 +82,7 @@ static void	run_checkers(char **map, int x, int y)
 	check_walls(map, x, y);
 	clt = check_char(map, x, y);
 	get_player(map, &px, &py);
-	check_path(map, clt + 2, px, py);
+//	check_path(map, clt + 2, px, py);
 }
 
 /*	Check if map is correct, give it's size to x and y
