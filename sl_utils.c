@@ -1,13 +1,19 @@
 #include "so_long.h"
 
+/*	Free all malloced lists. */
+void	finish_prog(t_prog *sol)
+{
+
+}
+
 /*	Closes the window and print the mandatory "Error\n" message.
 	Can be followed by a custom message led by "nbr". */
-void	error_msg(int nbr, char **str)
+void	error_msg(int nbr, t_prog *sol)
 {
-	while (*str)
-		free(*str++);
+	if (sol)
+		finish_prog(sol);
 	if (nbr == 0)
-		perror("Error\nFile has no data.\n");
+		perror("Error\nInvalid file.\n");
 	else if (nbr == 1)
 		perror("Error\nMap size isn't correct.\n");
 	else if (nbr == 2)
@@ -22,6 +28,21 @@ void	error_msg(int nbr, char **str)
 		perror("Error\nCouldn't malloc.\n");
 	else if (nbr == 7)
 		perror("Error\nInvalid number of arguments.\n");
+	else if (nbr == 8)
+		perror("Error\nSomething went wrong with MLX!");
 //close windows;
 	exit (0);
+}
+
+/*	Return opened file or end program if can't open. */
+int	open_fd(char *name, t_prog *sol)
+{
+	int	fd;
+
+	if (!name)
+		error_msg(0, sol);
+	fd = open(name, O_RDONLY);
+	if (fd == -1)
+		error_msg(0, sol);
+	return (fd);
 }
