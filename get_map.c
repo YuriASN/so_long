@@ -1,17 +1,17 @@
 #include "so_long.h"
 
 /*	Get locations of exit, player and collectibles with it's amount. */
-static void	get_locations(char c, t_pos *curr, t_prog sol)
+static void	get_locations(char c, t_pos *curr, t_prog *sol)
 {
 	t_pos	new_pos;
+	int		i;
 
+	i = -1;
 	if (c == '0')
 		return ;
 	if (c == 'C')
 	{
-		new_pos = init_pos(sol);
-		*sol->game->clt[sol->game->clt_count] = &new_pos;
-		sol->game->clt[sol->game->clt_count++] = curr;
+		sol->game->clt[++i] = curr;
 	}
 	else if (c == 'E')
 	{
@@ -35,7 +35,6 @@ static void	fd_to_map(int fd, t_prog *sol)
 	char	buffer[1];
 	t_pos	*curr;
 
-
 	curr = init_pos(sol);
 	while (read(fd, buffer, 1))
 	{
@@ -53,13 +52,14 @@ static void	fd_to_map(int fd, t_prog *sol)
 			sol->map[curr->y][curr->x] = 0;
 		}
 		else
-			error_msg(5, map);
+			error_msg(5, sol);
 		curr->x++;
 	}
 	free (curr);
+	close (fd);
 }
 
-/*	Get size of map and put if on x and y.
+/*	Get size of map and put if on x and y and count collectibles.
 	Check if all lines are the same size and if map is a rectangle.
 	Kill program if any error is found. */
 static void	get_size(int fd, t_prog	*sol)
@@ -67,12 +67,10 @@ static void	get_size(int fd, t_prog	*sol)
 	char	buffer[1];
 	int		x;
 
-	buffer[0] = 0;
 	while (read(fd, buffer, 1) && buffer[0] != '\n')
 		sol->size->x++;
 	if (!buffer[0])
 		error_msg(0, sol);
-	sol->size->y++;
 	x = 0;
 	while (read(fd, buffer, 1))
 	{
@@ -84,8 +82,10 @@ static void	get_size(int fd, t_prog	*sol)
 			x = 0;
 			sol->size->y++;
 		}
+		if (buffer[0] == 'C')
+			sol->game->clt_count++;
 	}
-	sol->size->y++;
+	sol->size->y += 2;
 	if (sol->size->y < 3 || sol->size->x <= sol->size->y)
 		error_msg(1, sol);
 	close(fd);
@@ -93,7 +93,7 @@ static void	get_size(int fd, t_prog	*sol)
 
 /*	Check if map has walls all around.
 	Kill program if it doesn't. */
-static void	check_walls(t_prog sol)
+static void	check_walls(t_prog *sol)
 {
 	int	i;
 	int	j;
@@ -116,20 +116,18 @@ static void	check_walls(t_prog sol)
 
 /*	Get all map data.
 	Kill program if any error is found. */
-void	get_map(t_prog sol, char *name)
+void	get_map(t_prog *sol, char *name)
 {
 	int	fd;
 
 	fd = open_fd(name, sol);
 	get_size(fd, sol);
+	if (sol->game->clt_count < 1)
+		error_msg(5, sol);
 	sol->map = ft_calloc(sizeof(int), sol->size->y + sol->size->y);
 	if (!sol->map)
 		error_msg(6, sol);
 	fd = open_fd(name, sol);
 	fd_to_map(fd, sol);
-	close (fd);
-	if (sol->game->clt_count < 1)
-		error_msg(5, map);
-	check_walls()
+	check_walls(sol);
 }
-

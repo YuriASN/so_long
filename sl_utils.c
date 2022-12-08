@@ -1,9 +1,29 @@
 #include "so_long.h"
 
-/*	Free all malloced lists. */
-void	finish_prog(t_prog *sol)
+/*	Free all malloc inside game */
+static void	finish_game(t_game *game)
 {
+	if (game->player_pos)
+		free (game->player_pos);
+	if (game->exit)
+		free (game->exit);
+	while (game->clt_count--)
+		free (game->clt[game->clt_count]);
+	free (game);
+}
 
+/*	Free all malloced inside sol. */
+static void	finish_prog(t_prog *sol)
+{
+	if (!sol)
+		return ;
+	if (sol->game)
+		finish_game(sol->game);
+	if (sol->size)
+		free (sol->size);
+	if (sol->map)
+		free (sol->map);
+	free (sol);
 }
 
 /*	Closes the window and print the mandatory "Error\n" message.
@@ -29,8 +49,7 @@ void	error_msg(int nbr, t_prog *sol)
 	else if (nbr == 7)
 		perror("Error\nInvalid number of arguments.\n");
 	else if (nbr == 8)
-		perror("Error\nSomething went wrong with MLX!");
-//close windows;
+		perror("Error\nSomething went wrong with MLX!\n");
 	exit (0);
 }
 

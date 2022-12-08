@@ -14,17 +14,7 @@
 # include "libft/libft.h"
 # include <errno.h>
 # include <mlx.h>
-
-typedef struct s_img
-{
-	void		*img;
-	char		*addr;
-	int			bits_per_pixel;
-	int			line_length;
-	int			endian;
-	int			width;
-	int			height;
-}				t_img;
+# include <mlx_int.h>
 
 typedef struct s_pos
 {
@@ -34,9 +24,9 @@ typedef struct s_pos
 
 typedef struct s_game
 {
-	t_pos		player_pos;
-	t_pos		exit;
-	t_pos		*clt;
+	t_pos		*player_pos;
+	t_pos		*exit;
+	t_pos		**clt;
 	int			go_up;
 	int			go_down;
 	int			go_left;
@@ -52,7 +42,11 @@ typedef struct s_prog
 	t_pos		*size;
 	void		*mlx;
 	void		*win;
-	t_img		*player;
+	t_img		*img;
+	t_img		*player_up;
+	t_img		*player_down;
+	t_img		*player_left;
+	t_img		*player_right;
 	t_img		*wall;
 	t_img		*clt;
 	t_img		*ground;
@@ -62,8 +56,8 @@ typedef struct s_prog
 
 void	error_msg(int nbr, t_prog *sol);
 int		open_fd(char *name, t_prog *sol);
-t_prog	*prog_init(int fd);
-t_pos	*init_pos(t_prog sol);
-void	get_map(t_prog sol, char *name);
+t_prog	*prog_init(char *name);
+t_pos	*init_pos(t_prog *sol);
+void	get_map(t_prog *sol, char *name);
 
 #endif

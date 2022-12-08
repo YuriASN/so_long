@@ -1,17 +1,18 @@
 NAME = so_long
 
-SRC = check_path.c map_checkers.c sl_utils.c so_long.c
+SRC = so_long.c init.c get_map.c sl_utils.c sl_window.c
 
 OBJ = $(SRC: .c=.o)
 
 CC = gcc
 FALGS = -Wall -Wextra -Werror
+MLX = -lbsd -lmlx -lX11 -lXext
 
 all: $(NAME)
 
 $(NAME):
 	@make bonus -Clibft/ --no-print-directory
-	@$(CC) $(FLAGS) $(SRC) -g -fsanitize=address -Llibft -lft -o $(NAME)
+	@$(CC) $(FLAGS) $(SRC) -g -fsanitize=address -Llibft -lft -o $(NAME) $(MLX)
 	@echo "\033[92mProgram compiled!\033[m"
 
 clean:
