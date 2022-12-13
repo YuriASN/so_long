@@ -8,7 +8,7 @@ t_pos	*init_pos(t_prog *sol)
 
 	init = ft_calloc(sizeof(t_pos), 1);
 	if (!init)
-		error_msg(6, sol);
+		error_msg("Error\nCouldn't malloc positions.\n", sol);
 	init->y = 0;
 	init->x = 0;
 	return (init);
@@ -20,7 +20,7 @@ static void	game_init(t_prog *sol, char *name)
 {
 	sol->game = malloc(sizeof(t_game));
 	if (!sol->game)
-		finish_prog(sol);
+		error_msg("Error\nCouldn't malloc sol->game.\n", sol);
 	sol->game->player_pos = init_pos(sol);
 	sol->game->exit = init_pos(sol);
 	sol->game->clt = 0;
@@ -41,16 +41,17 @@ t_prog	*prog_init(char *name)
 
 	sol = malloc(sizeof(t_prog));
 	if (!sol)
-		finish_prog(sol);
+		error_msg("Error\nCouldn't malloc sol.\n", sol);
 	sol->map = 0;
 	sol->game = 0;
 	sol->size = init_pos(sol);
 	sol->mlx = 0;
 	sol->win = 0;
-	sol->player_up = 0;
-	sol->player_down = 0;
-	sol->player_left = 0;
-	sol->player_right = 0;
+	sol->player = 0;
+	sol->plr_up = 0;
+	sol->plr_down = 0;
+	sol->plr_left = 0;
+	sol->plr_right = 0;
 	sol->wall = 0;
 	sol->clt = 0;
 	sol->ground = 0;

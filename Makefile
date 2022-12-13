@@ -1,6 +1,6 @@
 NAME = so_long
 
-SRC = so_long.c init.c get_map.c sl_utils.c sl_window.c
+SRC = so_long.c init.c get_map.c sl_utils.c mlx_utils.c render_init.c
 
 OBJ = $(SRC: .c=.o)
 

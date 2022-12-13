@@ -1,29 +1,30 @@
 #include "so_long.h"
 
 /*	Get locations of exit, player and collectibles with it's amount. */
-static void	get_locations(char c, t_pos *curr, t_prog *sol)
+static void	get_location(char c, t_pos *curr, t_prog *sol)
 {
-	t_pos	new_pos;
-	int		i;
+	static int	clt = -1;
 
-	i = -1;
 	if (c == '0')
 		return ;
 	if (c == 'C')
 	{
-		sol->game->clt[++i] = curr;
+		sol->game->clt[++clt]->x = curr->x;
+		sol->game->clt[clt]->y = curr->y;
 	}
 	else if (c == 'E')
 	{
 		if (sol->game->exit->x != 0)
-			error_msg(5, sol);
-		sol->game->exit = curr;
+			error_msg("Error\nCMap has more than 1 exit.\n", sol);
+		sol->game->exit->x = curr->x;
+		sol->game->exit->y = curr->y;
 	}
 	else if (c == 'P')
 	{
 		if (sol->game->player_pos->x != 0)
-			error_msg(5, sol);
-		sol->game->player_pos = curr;
+			error_msg("Error\nCMap has more than 1 player.\n", sol);
+		sol->game->player_pos->x = curr->x;
+		sol->game->player_pos->y = curr->y;
 	}
 }
 
@@ -32,8 +33,8 @@ static void	get_locations(char c, t_pos *curr, t_prog *sol)
 	Also check for not allowed chars. */
 static void	fd_to_map(int fd, t_prog *sol)
 {
-	char	buffer[1];
-	t_pos	*curr;
+	static char	buffer[1];
+	t_pos		*curr;
 
 	curr = init_pos(sol);
 	while (read(fd, buffer, 1))
@@ -52,10 +53,10 @@ static void	fd_to_map(int fd, t_prog *sol)
 			sol->map[curr->y][curr->x] = 0;
 		}
 		else
-			error_msg(5, sol);
+			error_msg("Error\nCMap has wrong character.\n", sol);
 		curr->x++;
 	}
-	free (curr);
+	free(curr);
 	close (fd);
 }
 
@@ -70,7 +71,7 @@ static void	get_size(int fd, t_prog	*sol)
 	while (read(fd, buffer, 1) && buffer[0] != '\n')
 		sol->size->x++;
 	if (!buffer[0])
-		error_msg(0, sol);
+		error_msg("Error\nFile doesn't have enough data.\n", sol);
 	x = 0;
 	while (read(fd, buffer, 1))
 	{
@@ -78,16 +79,16 @@ static void	get_size(int fd, t_prog	*sol)
 		if (buffer[0] == '\n')
 		{
 			if (x - 1 != sol->size->x)
-				error_msg(1, sol);
+				error_msg("Error\nMap isn't correct size.\n", sol);
 			x = 0;
 			sol->size->y++;
 		}
-		if (buffer[0] == 'C')
+		else if (buffer[0] == 'C')
 			sol->game->clt_count++;
 	}
 	sol->size->y += 2;
 	if (sol->size->y < 3 || sol->size->x <= sol->size->y)
-		error_msg(1, sol);
+		error_msg("Error\nMap isn't correct size.\n", sol);
 	close(fd);
 }
 
@@ -102,15 +103,15 @@ static void	check_walls(t_prog *sol)
 	j = 0;
 	while (sol->map[0][++i] && i < sol->size->x)
 		if (sol->map[j][i] != 1)
-			error_msg(4, sol);
+			error_msg("Error\nMap isn't surrounded by walls.\n", sol);
 	i = -1;
 	while (sol->map[sol->size->y - 1][++i] && i < sol->size->x)
 		if (sol->map[sol->size->y -1][i] != 1)
-			error_msg(4, sol);
+			error_msg("Error\nMap isn't surrounded by walls.\n", sol);
 	while (sol->map[++j] && j < (sol->size->y -1))
 	{
 		if (sol->map[j][0] != 1 || sol->map[j][sol->size->x - 1] != 1)
-			error_msg(4, sol);
+			error_msg("Error\nMap isn't surrounded by walls.\n", sol);
 	}
 }
 
@@ -119,14 +120,26 @@ static void	check_walls(t_prog *sol)
 void	get_map(t_prog *sol, char *name)
 {
 	int	fd;
+	int	i;
 
+	i = -1;
 	fd = open_fd(name, sol);
 	get_size(fd, sol);
 	if (sol->game->clt_count < 1)
-		error_msg(5, sol);
-	sol->map = ft_calloc(sizeof(int), sol->size->y + sol->size->y);
+		error_msg("Error\nThe amount of components are wrong.\n", sol);
+	sol->map = ft_calloc(sizeof(int *), sol->size->y);
 	if (!sol->map)
-		error_msg(6, sol);
+		error_msg("Error\nFailed to malloc sol->map line amount.", sol);
+	while (++i < sol->size->y)
+	{
+		sol->map[i] = ft_calloc(sizeof(int *), sol->size->x);
+		if (!sol->map[i])
+			error_msg("Error\nFailed to malloc map line data.", sol);
+	}
+	sol->game->clt = ft_calloc(sizeof(t_pos *), sol->game->clt_count);
+	i = -1;
+	while (++i < sol->game->clt_count)
+		sol->game->clt[i] = init_pos(sol);
 	fd = open_fd(name, sol);
 	fd_to_map(fd, sol);
 	check_walls(sol);

@@ -43,10 +43,11 @@ typedef struct s_prog
 	void		*mlx;
 	void		*win;
 	t_img		*img;
-	t_img		*player_up;
-	t_img		*player_down;
-	t_img		*player_left;
-	t_img		*player_right;
+	t_img		*player;
+	t_img		*plr_up;
+	t_img		*plr_down;
+	t_img		*plr_left;
+	t_img		*plr_right;
 	t_img		*wall;
 	t_img		*clt;
 	t_img		*ground;
@@ -54,10 +55,14 @@ typedef struct s_prog
 
 }	t_prog;
 
-void	error_msg(int nbr, t_prog *sol);
+void	error_msg(char *str, t_prog *sol);
 int		open_fd(char *name, t_prog *sol);
 t_prog	*prog_init(char *name);
 t_pos	*init_pos(t_prog *sol);
+void	game_start(t_prog *sol);
+void	finish_prog(t_prog *sol);
 void	get_map(t_prog *sol, char *name);
+void	put_img_transp(t_prog *sol, t_img *img, int wx, int wy);
+void	put_image(t_prog *sol, t_img *img, int x, int y);
 
 #endif

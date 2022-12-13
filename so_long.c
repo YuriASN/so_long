@@ -20,9 +20,11 @@ int	main(int argc, char **argv)
 	t_prog	*sol;
 
 	if (argc != 2)
-		error_msg(7, NULL);
+		error_msg("Error\nInvalid number of arguments.", NULL);
 	check_file(argv[1]);
 	sol = prog_init(argv[1]);
+	game_start(sol);
+	mlx_loop(sol->mlx);
 printf("\n\t\t%sExited gracefully%s\n\n", GRN, CRESET);
 	exit (0);
 }
