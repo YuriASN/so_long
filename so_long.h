@@ -33,6 +33,7 @@ typedef struct s_game
 	int			go_right;
 	int			clt_count;
 	int			move_count;
+	int			moving;
 }	t_game;
 
 typedef struct s_prog
@@ -64,5 +65,10 @@ void	finish_prog(t_prog *sol);
 void	get_map(t_prog *sol, char *name);
 void	put_img_transp(t_prog *sol, t_img *img, int wx, int wy);
 void	put_image(t_prog *sol, t_img *img, int x, int y);
+int		key_press(int key_code, t_prog *sol);
+int		key_release(int key_code, t_prog *sol);
+int		mouse_press(int click, int x, int y, t_prog *sol);
+void	update(t_prog *sol);
+void	put_objects(t_prog *sol);
 
 #endif

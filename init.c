@@ -30,6 +30,7 @@ static void	game_init(t_prog *sol, char *name)
 	sol->game->go_right = 0;
 	sol->game->clt_count = 0;
 	sol->game->move_count = 0;
+	sol->game->moving = 0;
 	get_map(sol, name);
 }
 
@@ -57,5 +58,6 @@ t_prog	*prog_init(char *name)
 	sol->ground = 0;
 	sol->exit = 0;
 	game_init(sol, name);
+	game_start(sol);
 	return (sol);
 }

@@ -23,7 +23,10 @@ int	main(int argc, char **argv)
 		error_msg("Error\nInvalid number of arguments.", NULL);
 	check_file(argv[1]);
 	sol = prog_init(argv[1]);
-	game_start(sol);
+	put_objects(sol);
+	mlx_key_hook(sol->win, &key_release, sol);
+	mlx_mouse_hook(sol->win, &mouse_press, sol);
+	mlx_hook(sol->win, KeyPress, KeyPressMask, &key_press, sol);
 	mlx_loop(sol->mlx);
 printf("\n\t\t%sExited gracefully%s\n\n", GRN, CRESET);
 	exit (0);

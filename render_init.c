@@ -1,27 +1,5 @@
 #include "so_long.h"
 
-/*	Place Player, exit and collectibles on place. */
-static void	put_objects(t_prog *sol)
-{
-	int	i;
-	int	wx;
-	int	wy;
-
-	i = -1;
-	wx = sol->game->player_pos->x * 32;
-	wy = sol->game->player_pos->y * 32;
-	put_img_transp(sol, sol->player, wx, wy);
-	wx = sol->game->exit->x * 32;
-	wy = sol->game->exit->y * 32;
-	put_img_transp(sol, sol->exit, wx, wy);
-	while (++i < sol->game->clt_count)
-	{
-		wx = sol->game->clt[i]->x * 32;
-		wy = sol->game->clt[i]->y * 32;
-		put_img_transp(sol, sol->clt, wx, wy);
-	}
-}
-
 /*	Render walls and empty spaces. */
 static void	start_map(t_prog *sol)
 {
@@ -78,6 +56,8 @@ static void	get_images(t_prog *sol)
 /*	Start mlx processes, open window and call functions to put images on it. */
 void	game_start(t_prog *sol)
 {
+	if (sol->mlx)
+		return ;
 	sol->mlx = mlx_init();
 	if (!sol->mlx)
 		error_msg("Error\nCouldn't initialize mlx.\n", sol);
@@ -90,5 +70,4 @@ void	game_start(t_prog *sol)
 		error_msg("Error\nCouldn't initialize mlx image.\n", sol);
 	get_images(sol);
 	start_map(sol);
-	put_objects(sol);
 }
