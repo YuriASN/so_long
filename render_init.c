@@ -21,11 +21,8 @@ static void	start_map(t_prog *sol)
 }
 
 /*	Attribute image files to it's pointers. */
-static void	get_images(t_prog *sol)
+static void	get_images(t_prog *sol, int w, int h)
 {
-	int	w;
-	int	h;
-
 	sol->plr_up = mlx_xpm_file_to_image(sol->mlx, "img/plr_b.xpm", &w, &h);
 	if (!sol->plr_up)
 		error_msg("Error\nCouldn't load image plr_b.xpm\n", sol);
@@ -56,6 +53,9 @@ static void	get_images(t_prog *sol)
 /*	Start mlx processes, open window and call functions to put images on it. */
 void	game_start(t_prog *sol)
 {
+	int	w;
+	int	h;
+
 	if (sol->mlx)
 		return ;
 	sol->mlx = mlx_init();
@@ -68,6 +68,6 @@ void	game_start(t_prog *sol)
 	sol->img = mlx_new_image(sol->mlx, 32, 32);
 	if (!sol->img)
 		error_msg("Error\nCouldn't initialize mlx image.\n", sol);
-	get_images(sol);
+	get_images(sol, w, h);
 	start_map(sol);
 }

@@ -1,36 +1,44 @@
 #include "so_long.h"
 
+/*	Place Player and exit on place */
+static void	put_plr_exit(t_prog *sol)
+{
+	int	wx;
+	int	wy;
+
+	wx = sol->game->exit->x * 32;
+	wy = sol->game->exit->y * 32;
+	put_img_transp(sol, sol->exit, wx, wy);
+	wx = sol->game->player_pos->x * 32;
+	wy = sol->game->player_pos->y * 32;
+	put_img_transp(sol, sol->player, wx, wy);
+}
+
 /*	Check wich key was pressed and move player to that direction. */
 int	key_press(int key_code, t_prog *sol)
 {
-	ft_printf("Key code = %i\n", key_code);
-	if (key_code == 65361)
-		sol->game->moving = 1;
-	else if (key_code == 65363)
-		sol->game->moving = 2;
-	else if (key_code == 65362)
-		sol->game->moving = 3;
-	else if (key_code == 65364)
-		sol->game->moving = 4;
-	else if (key_code == 65307)
-		finish_prog(sol);
-	update(sol);
-}
+	int	x;
+	int	y;
 
-/*	Stop moving the player */
-int	key_release(int key_code, t_prog *sol)
-{
-	if (key_code == 65361 || key_code == 65362
-		|| key_code == 65363 || key_code == 65364)
-	{
-		sol->game->moving = 0;
-		ft_printf("key released\n");
-	}
-	update(sol);
+	x = sol->game->player_pos->x;
+	y = sol->game->player_pos->y;
+//ft_printf("Key code = %i\n", key_code);
+	if (key_code == 65361)
+		move_left(sol, x, y);
+	else if (key_code == 65363)
+		move_right(sol, x, y);
+	else if (key_code == 65362)
+		move_up(sol, x, y);
+	else if (key_code == 65364)
+		move_down(sol, x, y);
+	else if (key_code == 65307)
+		end_game(sol);
+	put_plr_exit(sol);
 }
 
 /*	Handle mouse clicks to close and minimize the window. */
-int	mouse_press(int click, int x, int y, t_prog *sol)
+int	close_button(t_prog *sol)
 {
-	printf("mouse click = %i at %i %i\n", click, x, y);
+printf("chamou pra fechar\n");
+	end_game(sol);
 }

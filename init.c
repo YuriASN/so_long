@@ -29,6 +29,7 @@ static void	game_init(t_prog *sol, char *name)
 	sol->game->go_left = 0;
 	sol->game->go_right = 0;
 	sol->game->clt_count = 0;
+	sol->game->collected = 0;
 	sol->game->move_count = 0;
 	sol->game->moving = 0;
 	get_map(sol, name);
