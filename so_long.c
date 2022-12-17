@@ -1,5 +1,18 @@
 #include "so_long.h"
 
+/*	Return opened file or end program if can't open. */
+int	open_fd(char *name, t_prog *sol)
+{
+	int	fd;
+
+	if (!name)
+		error_msg(0, sol);
+	fd = open(name, O_RDONLY);
+	if (fd == -1)
+		error_msg(0, sol);
+	return (fd);
+}
+
 /* Check if file extension is .ber */
 static void	check_file(char *name)
 {
