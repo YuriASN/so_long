@@ -1,6 +1,6 @@
 #include "so_long.h"
 
-/*	Changes player image to left and move if isn't a wall. */
+/*	Changes player image to the given direction and move if isn't a wall. */
 void	move_left(t_prog *sol, int x, int y)
 {
 	put_image(sol, sol->ground, x, y);
@@ -11,6 +11,7 @@ void	move_left(t_prog *sol, int x, int y)
 	is_component(sol, --x, y);
 }
 
+/*	Changes player image to the given direction and move if isn't a wall. */
 void	move_right(t_prog *sol, int x, int y)
 {
 	put_image(sol, sol->ground, x, y);
@@ -21,6 +22,7 @@ void	move_right(t_prog *sol, int x, int y)
 	is_component(sol, ++x, y);
 }
 
+/*	Changes player image to the given direction and move if isn't a wall. */
 void	move_up(t_prog *sol, int x, int y)
 {
 	put_image(sol, sol->ground, x, y);
@@ -31,6 +33,7 @@ void	move_up(t_prog *sol, int x, int y)
 	is_component(sol, x, --y);
 }
 
+/*	Changes player image to the given direction and move if isn't a wall. */
 void	move_down(t_prog *sol, int x, int y)
 {
 	put_image(sol, sol->ground, x, y);

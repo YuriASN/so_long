@@ -1,11 +1,14 @@
 #include "so_long.h"
 
+/* Return color of pixel as a unsigned int. */
 static unsigned int	mlx_get_pixel(t_img *img, int x, int y)
 {
 	return (*(unsigned int *)
 		(img->data + (x * img->bpp / 8 + y * img->size_line)));
 }
 
+/* 	Check if pixel of image is transparent.
+	Return TRUE or FALSE */
 static int	is_transp(t_img *img, int x, int y)
 {
 	if (!(img->data + (x * img->bpp / 8 + y * img->size_line))[0])
