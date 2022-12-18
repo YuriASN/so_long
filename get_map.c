@@ -101,8 +101,6 @@ static void	checkers(t_prog *sol)
 	int	i;
 	int	j;
 
-	if (sol->size->y < 3 || sol->size->x <= sol->size->y)
-		error_msg("Error\nMap isn't correct size.\n", sol);
 	if (sol->game->clt_count < 1)
 		error_msg("Error\n Map has no collectibles.\n", sol);
 	i = -1;

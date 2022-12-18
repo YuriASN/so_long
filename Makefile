@@ -1,7 +1,7 @@
 NAME = so_long
 
-SRC = so_long.c init.c get_map.c sl_quit.c mlx_utils.c render_init.c \
-	moves.c play.c events.c
+SRC = so_long.c init.c get_map.c sl_quit.c mlx_utils.c game_start.c \
+	moves.c is_component.c events.c
 
 OBJ = $(SRC: .c=.o)
 
