@@ -16,7 +16,9 @@ int	open_fd(char *name, t_prog *sol)
 /* Check if file extension is .ber */
 static void	check_file(char *name)
 {
-	int	i;
+	int		i;
+	int		fd;
+	char	buffer[1];
 
 	i = ft_strlen(name) - 1;
 	if (name[i - 3] != '.' || name[i - 2] != 'b'
@@ -25,6 +27,14 @@ static void	check_file(char *name)
 		perror("Error\nFile isnt a \".ber\" extension.\n");
 		exit (0);
 	}
+	fd = open_fd(name, NULL);
+	if (!read(fd, buffer, 1))
+	{
+		close(fd);
+		perror("Error\nFile has no data.\n");
+		exit(0);
+	}
+	close (fd);
 }
 
 int	main(int argc, char **argv)

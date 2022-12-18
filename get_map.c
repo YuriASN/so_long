@@ -15,7 +15,7 @@ static void	get_location(char c, t_pos *curr, t_prog *sol)
 	else if (c == 'E')
 	{
 		if (sol->game->exit)
-			error_msg("Error\nCMap has more than 1 exit.\n", sol);
+			error_msg("Error\nMap has more than 1 exit.\n", sol);
 		sol->game->exit = init_pos(sol);
 		sol->game->exit->x = curr->x;
 		sol->game->exit->y = curr->y;
@@ -23,7 +23,7 @@ static void	get_location(char c, t_pos *curr, t_prog *sol)
 	else if (c == 'P')
 	{
 		if (sol->game->player_pos)
-			error_msg("Error\nCMap has more than 1 player.\n", sol);
+			error_msg("Error\nMap has more than 1 player.\n", sol);
 		sol->game->player_pos = init_pos(sol);
 		sol->game->player_pos->x = curr->x;
 		sol->game->player_pos->y = curr->y;
@@ -72,8 +72,7 @@ static void	get_size(int fd, t_prog	*sol)
 
 	while (read(fd, buffer, 1) && buffer[0] != '\n')
 		sol->size->x++;
-	if (!buffer[0])
-		error_msg("Error\nFile doesn't have enough data.\n", sol);
+	sol->size->y++;
 	x = 0;
 	while (read(fd, buffer, 1))
 	{
@@ -91,19 +90,21 @@ static void	get_size(int fd, t_prog	*sol)
 		else if (buffer[0] == 'C')
 			sol->game->clt_count++;
 	}
-	close(fd);
-	sol->size->y += 2;
-	if (sol->size->y < 3 || sol->size->x <= sol->size->y)
-		error_msg("Error\nMap isn't correct size.\n", sol);
+	if (buffer[0] != '\n')
+		sol->size->y++;
 }
 
 /*	Check if map has walls all around.
 	Kill program if it doesn't. */
-static void	check_walls(t_prog *sol)
+static void	checkers(t_prog *sol)
 {
 	int	i;
 	int	j;
 
+	if (sol->size->y < 3 || sol->size->x <= sol->size->y)
+		error_msg("Error\nMap isn't correct size.\n", sol);
+	if (sol->game->clt_count < 1)
+		error_msg("Error\n Map has no collectibles.\n", sol);
 	i = -1;
 	j = 0;
 	while (sol->map[0][++i] && i < sol->size->x)
@@ -130,8 +131,7 @@ void	get_map(t_prog *sol, char *name)
 	i = -1;
 	fd = open_fd(name, sol);
 	get_size(fd, sol);
-	if (sol->game->clt_count < 1)
-		error_msg("Error\n Map has no collectibles.\n", sol);
+	close(fd);
 	sol->map = ft_calloc(sizeof(int *), sol->size->y);
 	if (!sol->map)
 		error_msg("Error\nFailed to malloc sol->map line amount.", sol);
@@ -147,5 +147,5 @@ void	get_map(t_prog *sol, char *name)
 		sol->game->clt[i] = init_pos(sol);
 	fd = open_fd(name, sol);
 	fd_to_map(fd, sol);
-	check_walls(sol);
+	checkers(sol);
 }
