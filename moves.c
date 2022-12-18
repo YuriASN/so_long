@@ -8,6 +8,8 @@ void	move_left(t_prog *sol, int x, int y)
 	if (sol->map[y][x - 1] == 1)
 		return ;
 	sol->game->player_pos->x--;
+	sol->game->move_count++;
+	ft_printf("Number of moves = %i.\n", sol->game->move_count);
 	is_component(sol, --x, y);
 }
 
@@ -19,6 +21,8 @@ void	move_right(t_prog *sol, int x, int y)
 	if (sol->map[y][x + 1] == 1)
 		return ;
 	sol->game->player_pos->x++;
+	sol->game->move_count++;
+	ft_printf("Number of moves = %i.\n", sol->game->move_count);
 	is_component(sol, ++x, y);
 }
 
@@ -30,6 +34,8 @@ void	move_up(t_prog *sol, int x, int y)
 	if (sol->map[y - 1][x] == 1)
 		return ;
 	sol->game->player_pos->y--;
+	sol->game->move_count++;
+	ft_printf("Number of moves = %i.\n", sol->game->move_count);
 	is_component(sol, x, --y);
 }
 
@@ -41,5 +47,7 @@ void	move_down(t_prog *sol, int x, int y)
 	if (sol->map[y + 1][x] == 1)
 		return ;
 	sol->game->player_pos->y++;
+	sol->game->move_count++;
+	ft_printf("Number of moves = %i.\n", sol->game->move_count);
 	is_component(sol, x, ++y);
 }

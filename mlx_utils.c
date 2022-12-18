@@ -41,3 +41,25 @@ void	put_image(t_prog *sol, t_img *img, int x, int y)
 {
 	mlx_put_image_to_window(sol->mlx, sol->win, img, x * 32, y * 32);
 }
+
+/*	Place Player, exit and collectibles on place. */
+void	put_objects(t_prog *sol)
+{
+	int	i;
+	int	wx;
+	int	wy;
+
+	wx = sol->game->exit->x * 32;
+	wy = sol->game->exit->y * 32;
+	put_img_transp(sol, sol->exit, wx, wy);
+	i = -1;
+	while (++i < sol->game->clt_count - sol->game->collected)
+	{
+		wx = sol->game->clt[i]->x * 32;
+		wy = sol->game->clt[i]->y * 32;
+		put_img_transp(sol, sol->clt, wx, wy);
+	}
+	wx = sol->game->player_pos->x * 32;
+	wy = sol->game->player_pos->y * 32;
+	put_img_transp(sol, sol->player, wx, wy);
+}

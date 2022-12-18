@@ -14,15 +14,17 @@ static void	get_location(char c, t_pos *curr, t_prog *sol)
 	}
 	else if (c == 'E')
 	{
-		if (sol->game->exit->x != 0)
+		if (sol->game->exit)
 			error_msg("Error\nCMap has more than 1 exit.\n", sol);
+		sol->game->exit = init_pos(sol);
 		sol->game->exit->x = curr->x;
 		sol->game->exit->y = curr->y;
 	}
 	else if (c == 'P')
 	{
-		if (sol->game->player_pos->x != 0)
+		if (sol->game->player_pos)
 			error_msg("Error\nCMap has more than 1 player.\n", sol);
+		sol->game->player_pos = init_pos(sol);
 		sol->game->player_pos->x = curr->x;
 		sol->game->player_pos->y = curr->y;
 	}
@@ -53,7 +55,7 @@ static void	fd_to_map(int fd, t_prog *sol)
 			sol->map[curr->y][curr->x] = 0;
 		}
 		else
-			error_msg("Error\nCMap has wrong character.\n", sol);
+			error_msg("Error\nMap has wrong character.\n", sol);
 		curr->x++;
 	}
 	free(curr);
@@ -79,17 +81,20 @@ static void	get_size(int fd, t_prog	*sol)
 		if (buffer[0] == '\n')
 		{
 			if (x - 1 != sol->size->x)
+			{
+				close(fd);
 				error_msg("Error\nMap isn't correct size.\n", sol);
+			}
 			x = 0;
 			sol->size->y++;
 		}
 		else if (buffer[0] == 'C')
 			sol->game->clt_count++;
 	}
+	close(fd);
 	sol->size->y += 2;
 	if (sol->size->y < 3 || sol->size->x <= sol->size->y)
 		error_msg("Error\nMap isn't correct size.\n", sol);
-	close(fd);
 }
 
 /*	Check if map has walls all around.
@@ -126,7 +131,7 @@ void	get_map(t_prog *sol, char *name)
 	fd = open_fd(name, sol);
 	get_size(fd, sol);
 	if (sol->game->clt_count < 1)
-		error_msg("Error\nThe amount of components are wrong.\n", sol);
+		error_msg("Error\n Map has no collectibles.\n", sol);
 	sol->map = ft_calloc(sizeof(int *), sol->size->y);
 	if (!sol->map)
 		error_msg("Error\nFailed to malloc sol->map line amount.", sol);

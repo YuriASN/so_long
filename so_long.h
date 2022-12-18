@@ -34,7 +34,6 @@ typedef struct s_game
 	int			clt_count;
 	int			collected;
 	int			move_count;
-	int			moving;
 }	t_game;
 
 typedef struct s_prog

@@ -22,7 +22,6 @@ int	key_press(int key_code, t_prog *sol)
 
 	x = sol->game->player_pos->x;
 	y = sol->game->player_pos->y;
-//ft_printf("Key code = %i\n", key_code);
 	if (key_code == 65361)
 		move_left(sol, x, y);
 	else if (key_code == 65363)

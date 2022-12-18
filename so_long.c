@@ -39,6 +39,5 @@ int	main(int argc, char **argv)
 	mlx_hook(sol->win, KeyPress, KeyPressMask, &key_press, sol);
 	mlx_hook(sol->mlx, DestroyNotify, StructureNotifyMask, &close_button, sol);
 	mlx_loop(sol->mlx);
-printf("\n\t\t%sExited gracefully%s\n\n", GRN, CRESET);
 	exit (0);
 }

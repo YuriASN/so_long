@@ -21,8 +21,8 @@ static void	game_init(t_prog *sol, char *name)
 	sol->game = malloc(sizeof(t_game));
 	if (!sol->game)
 		error_msg("Error\nCouldn't malloc sol->game.\n", sol);
-	sol->game->player_pos = init_pos(sol);
-	sol->game->exit = init_pos(sol);
+	sol->game->player_pos = 0;
+	sol->game->exit = 0;
 	sol->game->clt = 0;
 	sol->game->go_up = 0;
 	sol->game->go_down = 0;
@@ -31,8 +31,11 @@ static void	game_init(t_prog *sol, char *name)
 	sol->game->clt_count = 0;
 	sol->game->collected = 0;
 	sol->game->move_count = 0;
-	sol->game->moving = 0;
 	get_map(sol, name);
+	if (!sol->game->player_pos)
+		error_msg("Error\nMap has no player.\n", sol);
+	if (!sol->game->exit)
+		error_msg("Error\nMap has no exit.\n", sol);
 }
 
 /*	Initiates main struct to 0's
@@ -49,6 +52,7 @@ t_prog	*prog_init(char *name)
 	sol->size = init_pos(sol);
 	sol->mlx = 0;
 	sol->win = 0;
+	sol->img = 0;
 	sol->player = 0;
 	sol->plr_up = 0;
 	sol->plr_down = 0;

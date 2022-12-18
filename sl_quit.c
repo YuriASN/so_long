@@ -32,15 +32,16 @@ void	finish_prog(t_prog *sol)
 	if (sol->mlx)
 		mlx_destroy_display(sol->mlx);
 	i = -1;
-	if (sol->map[0])
-		while (++i < sol->size->y)
-			free(sol->map[i]);
 	if (sol->map)
+	{
+		if (sol->map[0])
+			while (++i < sol->size->y)
+				free(sol->map[i]);
 		free(sol->map);
+	}
 	if (sol->size)
 		free(sol->size);
 	free(sol);
-	exit (0);
 }
 
 /*	Finish the mlx process and call finish prog */
@@ -78,4 +79,5 @@ void	error_msg(char *str, t_prog *sol)
 		perror("Error\n");
 	if (sol)
 		end_game(sol);
+	exit (0);
 }
