@@ -13,7 +13,8 @@ int	open_fd(char *name, t_prog *sol)
 	return (fd);
 }
 
-/* Check if file extension is .ber */
+/* Check if file extension is .ber
+	And if there's data on the file.*/
 static void	check_file(char *name)
 {
 	int		i;
