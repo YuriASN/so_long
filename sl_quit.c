@@ -1,5 +1,24 @@
 #include "so_long.h"
 
+void	kill_mlx_img(t_prog *sol)
+{
+	if (sol->open)
+	{
+		mlx_destroy_image(sol->mlx, sol->open);
+		sol->open = 0;
+	}
+	if (sol->open24)
+	{
+		mlx_destroy_image(sol->mlx, sol->open24);
+		sol->open24 = 0;
+	}
+	if (sol->open30)
+	{
+		mlx_destroy_image(sol->mlx, sol->open30);
+		sol->open30 = 0;
+	}
+}
+
 /*	Free all malloc inside game */
 static void	finish_game(t_game *game)
 {
@@ -65,6 +84,7 @@ int	end_game(t_prog *sol)
 		mlx_destroy_image(sol->mlx, sol->exit);
 	if (sol->img)
 		mlx_destroy_image(sol->mlx, sol->img);
+	kill_mlx_img(sol);
 	finish_prog(sol);
 	exit (0);
 }

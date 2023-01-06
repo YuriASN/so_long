@@ -17,22 +17,31 @@ static void	put_plr_exit(t_prog *sol)
 /*	Check wich key was pressed and move player to that direction. */
 int	key_press(int key_code, t_prog *sol)
 {
+//printf("key code %i\n", key_code);
 	int	x;
 	int	y;
 
 	x = sol->game->player_pos->x;
 	y = sol->game->player_pos->y;
-	if (key_code == 65361)
+	if (!sol->start && key_code == 65293)
+	{
+		sol->start++;
+		kill_mlx_img(sol);
+		start_map(sol);
+		put_objects(sol);
+	}
+	if (sol->start && key_code == 65361)
 		move_left(sol, x, y);
-	else if (key_code == 65363)
+	else if (sol->start && key_code == 65363)
 		move_right(sol, x, y);
-	else if (key_code == 65362)
+	else if (sol->start && key_code == 65362)
 		move_up(sol, x, y);
-	else if (key_code == 65364)
+	else if (sol->start && key_code == 65364)
 		move_down(sol, x, y);
 	else if (key_code == 65307)
 		end_game(sol);
-	put_plr_exit(sol);
+	if (sol->start)
+		put_plr_exit(sol);
 }
 
 /*	Handle mouse clicks to close and minimize the window. */

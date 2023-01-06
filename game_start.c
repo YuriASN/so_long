@@ -1,7 +1,7 @@
 #include "so_long.h"
 
 /*	Render walls and empty spaces. */
-static void	start_map(t_prog *sol)
+void	start_map(t_prog *sol)
 {
 	int	x;
 	int	y;
@@ -69,5 +69,4 @@ void	game_start(t_prog *sol)
 	if (!sol->img)
 		error_msg("Error\nCouldn't initialize mlx image.\n", sol);
 	get_images(sol, w, h);
-	start_map(sol);
 }

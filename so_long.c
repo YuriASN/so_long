@@ -43,10 +43,12 @@ int	main(int argc, char **argv)
 	t_prog	*sol;
 
 	if (argc != 2)
-		error_msg("Error\nInvalid number of arguments.", NULL);
+		error_msg("Error\nInvalid number of arguments.\n", NULL);
 	check_file(argv[1]);
 	sol = prog_init(argv[1]);
-	put_objects(sol);
+	mlx_string_put(sol->mlx, sol->win, 1, 32, 13107250,
+		"Press\"ENTER\"");
+	put_mlx_img(sol);
 	mlx_hook(sol->win, KeyPress, KeyPressMask, &key_press, sol);
 	mlx_hook(sol->mlx, DestroyNotify, StructureNotifyMask, &close_button, sol);
 	mlx_loop(sol->mlx);
