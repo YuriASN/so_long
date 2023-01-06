@@ -17,7 +17,6 @@ static void	put_plr_exit(t_prog *sol)
 /*	Check wich key was pressed and move player to that direction. */
 int	key_press(int key_code, t_prog *sol)
 {
-//printf("key code %i\n", key_code);
 	int	x;
 	int	y;
 
@@ -47,6 +46,5 @@ int	key_press(int key_code, t_prog *sol)
 /*	Handle mouse clicks to close and minimize the window. */
 int	close_button(t_prog *sol)
 {
-printf("chamou pra fechar\n");
 	end_game(sol);
 }

@@ -50,7 +50,7 @@ int	main(int argc, char **argv)
 		"Press\"ENTER\"");
 	put_mlx_img(sol);
 	mlx_hook(sol->win, KeyPress, KeyPressMask, &key_press, sol);
-	mlx_hook(sol->mlx, DestroyNotify, StructureNotifyMask, &close_button, sol);
+	mlx_hook(sol->win, DestroyNotify, StructureNotifyMask, &close_button, sol);
 	mlx_loop(sol->mlx);
 	exit (0);
 }
