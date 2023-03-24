@@ -70,6 +70,7 @@ void	put_mlx_img(t_prog *sol);
 void	kill_mlx_img(t_prog *sol);
 void	finish_prog(t_prog *sol);
 void	get_map(t_prog *sol, char *name);
+void	check_path(t_prog *sol, int fd);
 void	put_img_transp(t_prog *sol, t_img *img, int wx, int wy);
 void	put_image(t_prog *sol, t_img *img, int x, int y);
 int		key_press(int key_code, t_prog *sol);

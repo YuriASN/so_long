@@ -7,7 +7,6 @@ void	put_mlx_img(t_prog *sol)
 	int	h;
 
 	w = 0;
-
 	sol->open = mlx_xpm_file_to_image(sol->mlx, "img/open.xpm", &w, &w);
 	if (!sol->open)
 		error_msg("Error\nCouldn't load open.xpm\n", sol);

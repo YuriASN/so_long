@@ -117,6 +117,10 @@ static void	checkers(t_prog *sol)
 		if (sol->map[j][0] != 1 || sol->map[j][sol->size->x - 1] != 1)
 			error_msg("Error\nMap isn't surrounded by walls.\n", sol);
 	}
+	if (!sol->game->exit)
+		error_msg("Error\nMap has no exit.\n", sol);
+	if (!sol->game->player_pos)
+		error_msg("Error\nMap has no player.\n", sol);
 }
 
 /*	Get all map data.
@@ -146,4 +150,6 @@ void	get_map(t_prog *sol, char *name)
 	fd = open_fd(name, sol);
 	fd_to_map(fd, sol);
 	checkers(sol);
+	fd = open_fd(name, sol);
+	check_path(sol, fd);
 }

@@ -1,134 +1,72 @@
+
 #include "so_long.h"
 
-/*	If able to move right it changes value of next position.
-	Substract 1 if a component (Player, Exit or collectible) are found.
-	Return 0 if it's a wall */
-static int	move_right(char **map, int *cmp, int *px, int *py)
+/*	Reads fd file to a char array */
+static char	**fd_to_char(t_prog *sol, int fd)
 {
-printf("Move RIGHT\t");
-	if (map[*py][*px + 1] == '1' || map[*py][*px + 1] == 'X')
-		return (0);
-	if (map[*py][*px + 1] != '1' && map[*py][*px + 1] != 'X')
+	char	**map;
+	char	*buffer;
+	int		i;
+
+	buffer = ft_calloc(sizeof(char *), sol->size->x + 2);
+	map = ft_calloc(sizeof(char **), sol->size->y + 1);
+	i = -1;
+	while (read(fd, buffer, sol->size->x + 1))
 	{
-		if (map[*py][*px + 1] == 'E' || map[*py][*px + 1] == 'C')
-			--*cmp;
-		/* if (map[*py][*px + 1] == 'B')
-			map[*py][*px + 1] = 'X';
-		else */
-		map[*py][*px + 1] = 'B';
-		++*px;
+		map[++i] = ft_calloc(sizeof(char *), sol->size->x + 1);
+		ft_strlcpy(map[i], buffer, sol->size->x + 1);
 	}
-	return (1);
+	free(buffer);
+	close(fd);
+	return (map);
 }
 
-/*	If able to move left it changes value of next position.
-	Substract 1 if a component (Player, Exit or collectible) are found.
-	Return 0 if it's a wall */
-static int	move_left(char **map, int *cmp, int *px, int *py)
+/*	Go around player initial position changing places where already been.
+	Collectibles are reduced when found and exit reduces it as well.
+	If path is valid the clts must end with -1.*/
+static void	walk_around(char **map, int x, int y, int *clts)
 {
-printf("Move LEFT\t");
-	if (map[*py][*px -1] == '1' || map[*py][*px -1] == 'X')
-		return (0);
-	if (map[*py][*px -1] != '1' && map[*py][*px -1] != 'X')
+	if (map[y][x] == '1' || map[y][x] == 'o')
+		return ;
+	if (map[y][x] == 'E')
 	{
-		if (map[*py][*px -1] == 'E' || map[*py][*px -1] == 'C')
-			--*cmp;
-		/* if (map[*py][*px -1] == 'B')
-			map[*py][*px -1] = 'X';
-		else */
-		map[*py][*px -1] = 'B';
-		--*px;
+		*clts -= 1;
+		map[y][x] = 'o';
 	}
-	return (1);
+	else if (map[y][x] == 'C')
+	{
+		*clts -= 1;
+		map[y][x] = 'o';
+	}
+	else if (map[y][x] == 'P')
+		map[y][x] = 'o';
+	else if (map[y][x] == '0')
+		map[y][x] = 'o';
+	walk_around(map, x + 1, y, clts);
+	walk_around(map, x - 1, y, clts);
+	walk_around(map, x, y + 1, clts);
+	walk_around(map, x, y - 1, clts);
 }
 
-/*	If able to move up it changes value of next position.
-	Substract 1 if a component (Player, Exit or collectible) are found.
-	Return 0 if it's a wall */
-static int	move_up(char **map, int *cmp, int *px, int *py)
+/*	Check if there's a available path on the map to
+	collect all itens and exit.*/
+void	check_path(t_prog *sol, int fd)
 {
-printf("Move UP\t");
-	if (map[*py -1][*px] == '1' || map[*py -1][*px] == 'X')
-		return (0);
-	if (map[*py -1][*px] != '1' && map[*py -1][*px] != 'X')
-	{
-		if (map[*py -1][*px] == 'E' || map[*py -1][*px] == 'C')
-			--*cmp;
-		/* if (map[*py -1][*px] == 'B')
-			map[*py -1][*px] = 'X';
-		else */
-		map[*py -1][*px] = 'B';
-		--*py;
-	}
-	return (1);
-}
+	char	**map;
+	int		x;
+	int		y;
+	int		clts;
+	int		i;
 
-/*	If able to move down it changes value of next position.
-	Substract 1 if a component (Player, Exit or collectible) are found.
-	Return 0 if it's a wall */
-static int	move_down(char **map, int *cmp, int *px, int *py)
-{
-printf("Move DOWN\t");
-	if (map[*py + 1][*px] == '1'  || map[*py + 1][*px] == 'X')
-		return (0);
-	if (map[*py + 1][*px] != '1' && map[*py + 1][*px] != 'X')
-	{
-		if (map[*py + 1][*px] == 'E' || map[*py + 1][*px] == 'C')
-			--*cmp;
-		/* if (map[*py + 1][*px] == 'B')
-			map[*py + 1][*px] = 'X';
-		else */
-		map[*py + 1][*px] = 'B';
-		++*py;
-	}
-	return (1);
-}
-
-/*	Check if there's available path to collect everything and exit.
-	Adds Cmp = collectives plus exit. Player's position are px, py,
-	Clean quit if there isn't*/
-void	check_path(char **map, int cmp, int px, int py)
-{
-	int	last;
-
-	last = 0;
-printf("%sCheck Path%s\t", YEL, CRESET);
-	map[py][px] = 'B';
-	while (map)
-	{
-int o = -1; printf("\n"); while (map[++o]){printf("%i\t", o);	printf("%s", map[o]);} printf("\n"); getchar();
-printf("%sentrar no while%s", RED, CRESET);
-
-		/* if (move_right(map, &cmp, &px, &py))
-			continue ;
-		if (move_down(map, &cmp, &px, &py))
-			continue ;
-		if (move_left(map, &cmp, &px, &py))
-			continue ;
-		if (move_up(map, &cmp, &px, &py))
-			continue ; */
-		/* if (last == 0)
-			if (!move_right(map, &cmp, &px, &py))
-				last = 1;
-		if (last == 1)
-			if (!move_down(map, &cmp, &px, &py))
-				last = 2;
-		if (last == 2 )
-			if (!move_left(map, &cmp, &px, &py))
-				last = 3;
-		if (last == 3)
-			if (!move_up(map, &cmp, &px, &py))
-				last = 0; */
-/* if (!move_right(map, &cmp, &px, &py) &&
-!move_down(map, &cmp, &px, &py) &&
-!move_up(map, &cmp, &px, &py) &&
-!move_left(map, &cmp, &px, &py)	)
-	{break;} */
-//int o = -1; printf("\n"); while (map[++o]){printf("%i\t", o);	printf("%s", map[o]);} printf("\n");
-printf("\n");
-getchar();
-//		break ;
-	}
-	if (cmp != 0)
-		error_msg(3, map);
+	map = fd_to_char(sol, fd);
+	x = sol->game->player_pos->x;
+	y = sol->game->player_pos->y;
+	clts = sol->game->clt_count;
+	walk_around(map, x, y, &clts);
+	i = -1;
+	while (++i <= sol->size->y)
+		free (map[i]);
+	free (map);
+	if (clts != -1)
+		error_msg("Error\nMap has no valid path\n", sol);
 }
