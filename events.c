@@ -41,10 +41,12 @@ int	key_press(int key_code, t_prog *sol)
 		end_game(sol);
 	if (sol->start)
 		put_plr_exit(sol);
+	return (1);
 }
 
 /*	Handle mouse clicks to close and minimize the window. */
 int	close_button(t_prog *sol)
 {
 	end_game(sol);
+	return (1);
 }

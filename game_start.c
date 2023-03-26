@@ -58,6 +58,8 @@ void	game_start(t_prog *sol)
 
 	if (sol->mlx)
 		return ;
+	w = 0;
+	h = 0;
 	sol->mlx = mlx_init();
 	if (!sol->mlx)
 		error_msg("Error\nCouldn't initialize mlx.\n", sol);

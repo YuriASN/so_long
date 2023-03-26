@@ -6,7 +6,7 @@ SRC = so_long.c init.c get_map.c sl_quit.c mlx_utils.c game_start.c \
 OBJ = $(SRC: .c=.o)
 
 CC = gcc
-FALGS = -Wall -Wextra -Werror
+FLAGS = -Wall -Wextra -Werror
 MLX = -lbsd -lmlx -lX11 -lXext
 
 all: $(NAME)
