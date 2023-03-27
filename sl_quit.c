@@ -49,7 +49,10 @@ void	finish_prog(t_prog *sol)
 	if (sol->win)
 		mlx_destroy_window(sol->mlx, sol->win);
 	if (sol->mlx)
+	{
 		mlx_destroy_display(sol->mlx);
+		free (sol->mlx);
+	}
 	i = -1;
 	if (sol->map)
 	{
