@@ -13,7 +13,7 @@ all: $(NAME)
 
 $(NAME):
 	@make bonus -Clibft/ --no-print-directory
-	@$(CC) $(FLAGS) $(SRC) -g -fsanitize=address -Llibft -lft -o $(NAME) $(MLX)
+	@$(CC) $(FLAGS) $(SRC) -Llibft -lft -o $(NAME) $(MLX)
 	@echo "\033[92mProgram compiled!\033[m"
 
 clean:
