@@ -12,19 +12,19 @@ static void	get_location(char c, t_pos *curr, t_prog *sol)
 		sol->game->clt[++clt]->x = curr->x;
 		sol->game->clt[clt]->y = curr->y;
 	}
-	else if (c == 'E')
+	if ((c == 'E' && sol->game->exit->x)
+		|| (c == 'P' && sol->game->player_pos->x))
 	{
-		if (sol->game->exit)
-			error_msg("Error\nMap has more than 1 exit.\n", sol);
-		sol->game->exit = init_pos(sol);
+		free(curr);
+		error_msg("Error\nMap has multiple players or exits.\n", sol);
+	}
+	if (c == 'E')
+	{
 		sol->game->exit->x = curr->x;
 		sol->game->exit->y = curr->y;
 	}
 	else if (c == 'P')
 	{
-		if (sol->game->player_pos)
-			error_msg("Error\nMap has more than 1 player.\n", sol);
-		sol->game->player_pos = init_pos(sol);
 		sol->game->player_pos->x = curr->x;
 		sol->game->player_pos->y = curr->y;
 	}
@@ -35,27 +35,27 @@ static void	get_location(char c, t_pos *curr, t_prog *sol)
 	Also check for not allowed chars. */
 static void	fd_to_map(int fd, t_prog *sol)
 {
-	static char	buffer[1];
-	t_pos		*curr;
+	char	buffer;
+	t_pos	*curr;
 
 	curr = init_pos(sol);
-	while (read(fd, buffer, 1))
+	while (read(fd, &buffer, 1))
 	{
-		if (buffer[0] == '1')
+		if (buffer == '1')
 			sol->map[curr->y][curr->x] = 1;
-		else if (buffer[0] == '\n')
+		else if (buffer == '\n')
 		{
 			curr->y++;
 			curr->x = -1;
 		}
-		else if (buffer[0] == '0' || buffer[0] == 'C'
-			|| buffer[0] == 'E' || buffer[0] == 'P')
-		{
-			get_location(buffer[0], curr, sol);
-			sol->map[curr->y][curr->x] = 0;
-		}
+		else if (buffer == '0' || buffer == 'C'
+			|| buffer == 'E' || buffer == 'P')
+			get_location(buffer, curr, sol);
 		else
+		{
+			free(curr);
 			error_msg("Error\nMap has wrong character.\n", sol);
+		}
 		curr->x++;
 	}
 	free(curr);
@@ -117,9 +117,9 @@ static void	checkers(t_prog *sol)
 		if (sol->map[j][0] != 1 || sol->map[j][sol->size->x - 1] != 1)
 			error_msg("Error\nMap isn't surrounded by walls.\n", sol);
 	}
-	if (!sol->game->exit)
+	if (!sol->game->exit->x)
 		error_msg("Error\nMap has no exit.\n", sol);
-	if (!sol->game->player_pos)
+	if (!sol->game->player_pos->x)
 		error_msg("Error\nMap has no player.\n", sol);
 }
 

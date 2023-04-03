@@ -97,9 +97,9 @@ int	end_game(t_prog *sol)
 void	error_msg(char *str, t_prog *sol)
 {
 	if (str)
-		perror(str);
+		ft_printf(str);
 	else
-		perror("Error\n");
+		ft_printf("Error\n");
 	if (sol)
 		end_game(sol);
 	exit (0);

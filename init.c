@@ -49,8 +49,8 @@ static void	game_init(t_prog *sol, char *name)
 	sol->game = malloc(sizeof(t_game));
 	if (!sol->game)
 		error_msg("Error\nCouldn't malloc sol->game.\n", sol);
-	sol->game->player_pos = 0;
-	sol->game->exit = 0;
+	sol->game->player_pos = init_pos(sol);
+	sol->game->exit = init_pos(sol);
 	sol->game->clt = 0;
 	sol->game->go_up = 0;
 	sol->game->go_down = 0;
